@@ -4,16 +4,54 @@
 // TODO: Use the D3 library to read in `samples.json`.
 d3.json('../../data/samples.json').then(sampledata => {
       console.log(sampledata)
-})
 
-// TODO: Create a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual.
-// * Use `sample_values` as the values for the bar chart.
-// * Use `otu_ids` as the labels for the bar chart.
-// * Use `otu_labels` as the hovertext for the chart.
 
-var ids = sampledata.samples[0].out_ids.reverse().slice(0,10);
-console.log(ids)
+      // TODO: Create a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual.
 
+      // Set variables, pulling only the top 10 by OTU
+      var ids = sampledata.samples[0].otu_ids.slice(0,10).reverse()
+      console.log(ids);
+      var values = sampledata.samples[0].sample_values.slice(0,10).reverse()
+      console.log(values)
+      var labels = sampledata.samples[0].otu_labels.slice(0,10).reverse()
+      console.log(labels)
+
+      // Convert ID data to strings to display properly
+      var otuIds = ids.map(id => 'OTU ' + id)
+
+      // * Use `sample_values` as the values for the bar chart.
+      // * Use `otu_ids` as the labels for the bar chart.
+      // * Use `otu_labels` as the hovertext for the chart.
+      var trace = {
+            x: values,
+            y: otuIds,
+            text: labels,
+            type: 'bar',
+            marker: {
+                  color: '#31AD26'
+            },
+            line: {
+                  width: 2
+            },
+            orientation: 'h'
+      }
+
+      var data = [trace]
+
+      var layout = {
+            title: 'Top 10 OTU',
+            margin: {
+                  l: 100,
+                  r: 100,
+                  t: 100,
+                  b: 30
+            }
+      }
+
+      Plotly.newPlot('bar', data, layout);
+
+
+});
 
 
 // TODO: Create a bubble chart that displays each sample.
