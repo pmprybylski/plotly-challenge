@@ -1,67 +1,65 @@
-// TODO: Wrap both plots code in a function called getPlots(id)
+// Set up function to generate plots
+function getPlots(id) {
+// Use the D3 library to read in `samples.json`.
+      d3.json('../../data/samples.json').then(sampledata => {
+            console.log(sampledata)
 
+            // Set variables, pulling only the top 10 by OTU
+            var ids = sampledata.samples[0].otu_ids.slice(0,10).reverse()
+            console.log(ids);
+            var values = sampledata.samples[0].sample_values.slice(0,10).reverse()
+            console.log(values)
+            var labels = sampledata.samples[0].otu_labels.slice(0,10).reverse() 
+            console.log(labels)
 
-// TODO: Use the D3 library to read in `samples.json`.
-d3.json('../../data/samples.json').then(sampledata => {
-      console.log(sampledata)
+            // Convert ID data to display properly
+            var otuIds = ids.map(id => 'OTU ' + id)
 
-
-      // TODO: Create a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual.
-
-      // Set variables, pulling only the top 10 by OTU
-      var ids = sampledata.samples[0].otu_ids.slice(0,10).reverse()
-      console.log(ids);
-      var values = sampledata.samples[0].sample_values.slice(0,10).reverse()
-      console.log(values)
-      var labels = sampledata.samples[0].otu_labels.slice(0,10).reverse()
-      console.log(labels)
-
-      // Convert ID data to strings to display properly
-      var otuIds = ids.map(id => 'OTU ' + id)
-
-      // * Use `sample_values` as the values for the bar chart.
-      // * Use `otu_ids` as the labels for the bar chart.
-      // * Use `otu_labels` as the hovertext for the chart.
-      var trace = {
-            x: values,
-            y: otuIds,
-            text: labels,
-            type: 'bar',
-            marker: {
-                  color: '#31AD26'
-            },
-            line: {
-                  width: 2
-            },
-            orientation: 'h'
-      }
-
-      var data = [trace]
-
-      var layout = {
-            title: 'Top 10 OTU',
-            margin: {
-                  l: 100,
-                  r: 100,
-                  t: 100,
-                  b: 30
+            // * Use `sample_values` as the values for the bar chart.
+            // * Use `otu_ids` as the labels for the bar chart.
+            // * Use `otu_labels` as the hovertext for the chart.
+            var trace_bar = {
+                  x: values,
+                  y: otuIds,
+                  text: labels,
+                  type: 'bar',
+                  marker: { color: '#B20A1C'},
+                  orientation: 'h'
             }
-      }
 
-      Plotly.newPlot('bar', data, layout);
+            var data_bar = [trace_bar]
 
+            var layout_bar = {
+                  title: 'Top 10 OTU',
+                  height: 600,
+                  width: 750
+            }
 
-});
+            Plotly.newPlot('bar', data_bar, layout_bar);
 
+            // Create a bubble chart that displays each sample.
+            var trace_bubble = {
+                  x: sampledata.samples[0].otu_ids,
+                  y: sampledata.samples[0].sample_values,
+                  text:sampledata.samples[0].otu_labels,
+                  mode: 'markers',
+                  marker: {
+                        color: sampledata.samples[0].otu_ids,
+                        size: sampledata.samples[0].sample_values
+                  }
+            }
 
-// TODO: Create a bubble chart that displays each sample.
-// * Use `otu_ids` for the x values.
-// * Use `sample_values` for the y values.
-// * Use `sample_values` for the marker size.
-// * Use `otu_ids` for the marker colors.
-// * Use `otu_labels` for the text values.
+            var data_bubble = [trace_bubble]
 
+            var layout_bubble = {
+                  xaxis: {title: 'OTU IDS'},
+                  height: 600,
+                  width: 1000
+            }
 
+            Plotly.newPlot('bubble', data_bubble, layout_bubble)
+      });
+}
 
 // TODO: Display the sample metadata, i.e., an individual's demographic information.
 
