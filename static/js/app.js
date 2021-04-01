@@ -5,11 +5,11 @@ function getPlots(id) {
             console.log(sampledata)
 
             // Set variables, pulling only the top 10 by OTU
-            var ids = sampledata.samples[0].otu_ids.slice(0,10).reverse()
+            var ids = sampledata.samples.filter(sample => sample.id == id)[0].otu_ids.slice(0,10).reverse()
             console.log(ids);
-            var values = sampledata.samples[0].sample_values.slice(0,10).reverse()
+            var values = sampledata.samples.filter(sample => sample.id == id)[0].sample_values.slice(0,10).reverse()
             console.log(values)
-            var labels = sampledata.samples[0].otu_labels.slice(0,10).reverse() 
+            var labels = sampledata.samples.filter(sample => sample.id == id)[0].otu_labels.slice(0,10).reverse() 
             console.log(labels)
 
             // Convert ID data to display properly
@@ -39,9 +39,9 @@ function getPlots(id) {
 
             // Create a bubble chart that displays each sample.
             var trace_bubble = {
-                  x: sampledata.samples[0].otu_ids,
-                  y: sampledata.samples[0].sample_values,
-                  text:sampledata.samples[0].otu_labels,
+                  x: sampledata.samples.filter(sample => sample.id == id)[0].otu_ids,
+                  y: sampledata.samples.filter(sample => sample.id == id)[0].sample_values,
+                  text: sampledata.samples.filter(sample => sample.id == id)[0].otu_labels,
                   mode: 'markers',
                   marker: {
                         color: sampledata.samples[0].otu_ids,
@@ -62,6 +62,8 @@ function getPlots(id) {
 }
 
 // TODO: Display the sample metadata, i.e., an individual's demographic information.
+
+
 
 // TODO: Display each key-value pair from the metadata JSON object somewhere on the page.
 
