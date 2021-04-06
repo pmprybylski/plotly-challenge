@@ -5,6 +5,27 @@ var barChart = d3.select('#bar')
 var bubbleChart = d3.select('#bubble')
 var gaugeChart = d3.select('#gauge')
 
+// Function for initial rendering
+function init() {
+      
+      // Data reset
+      dataReset()
+
+      // Read the data
+      d3.json('samples.json').then(sampledata => {
+
+            // Get the id data to the dropdown menu
+            sampledata.names.forEach(name => {
+                  var option = idSelect.append('option')
+                  option.text(name)
+            });
+
+            // First ID as default
+            var initId = idSelect.property('value')
+            getPlots(initId);
+      })
+}
+
 // Function to reset all tables & charts
 function dataReset() {
       demoTable.html('')
@@ -13,34 +34,11 @@ function dataReset() {
       gaugeChart.html('')
 }
 
-// Function for initial rendering
-function init() {
-      
-      // Data reset
-      dataReset()
-
-      // Read the data
-      d3.json('/data/samples.json').then(sampledata => {
-            console.log(sampledata)
-
-            // Get the id data to the dropdown menu
-            sampledata.names.forEach(name => {
-                  var option = idSelect.append('option')
-                  option.text(name)
-            })
-
-            // First ID as default
-            var initId = idSelect.property('value')
-            getPlots(initId)
-      })
-}
-
-
 // Function to generate plots
 function getPlots(id) {
 
       // Use the D3 library to read in `samples.json`.
-      d3.json('/data/samples.json').then(sampledata => {
+      d3.json('samples.json').then(sampledata => {
             console.log(sampledata)
 
             var meta = sampledata.metadata.filter(participant => participant.id == id)[0]
@@ -48,8 +46,8 @@ function getPlots(id) {
             // Clear demo table
             demoTable.html('')
 
-            Object.defineProperties(meta).forEach(key => {
-                  demoTable.append('p').text(key[0] + ' : ' + key[1])
+            Object.defineProperty(meta).forEach(key => {
+                  demoTable.append('p').text(key[0] + ` : ` + key[1])
             })
 
             // Variables for bar chart
@@ -60,7 +58,7 @@ function getPlots(id) {
             var otuLabels = []
             var sampleValues = []
 
-            Object.defineProperties(participantSample).forEach(([key, value]) => {
+            Object.defineProperty(participantSample).forEach(([key, value]) => {
                   switch (key) {
                         case 'otu_ids':
                               otuIds.push(value);
