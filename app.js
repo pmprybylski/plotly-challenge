@@ -41,13 +41,14 @@ function getPlots(id) {
       d3.json('samples.json').then(sampledata => {
             console.log(sampledata)
 
-            var meta = sampledata.metadata.filter(participant => participant.id == id)[0]
+            var metadata = sampledata.metadata.filter(participant => participant.id == id)[0]
+            var meta = metadata.id
             
             // Clear demo table
             demoTable.html('')
 
-            Object.defineProperty(meta).forEach(key => {
-                  demoTable.append('p').text(key[0] + ` : ` + key[1])
+            Object.entries(metadata).forEach((key) => {
+                  demoTable.append('p').text(key[0] + ' : ' + key[1])
             })
 
             // Variables for bar chart
@@ -58,7 +59,7 @@ function getPlots(id) {
             var otuLabels = []
             var sampleValues = []
 
-            Object.defineProperty(participantSample).forEach(([key, value]) => {
+            Object.entries(participantSample).forEach(([key, value]) => {
                   switch (key) {
                         case 'otu_ids':
                               otuIds.push(value);
@@ -130,10 +131,11 @@ function getPlots(id) {
       })
 }
 
+
 // Create the function for the change event
 function optionChanged(id) {
-      dataReset(),
-      getPlots()
+      dataReset(id),
+      getPlots(id)
 }
 
 init()
